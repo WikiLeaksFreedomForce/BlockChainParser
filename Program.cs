@@ -5,11 +5,12 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Threading.Tasks;
-
+using System.Configuration;
 
 namespace BlockChain {
     class Program {
-        static void Main(string[] args) {
+        static void Main(string[] args)
+        {
             var folder = GetBlocksFolder();
 
             // point to your "bitcoin core" blocks folder
@@ -17,15 +18,18 @@ namespace BlockChain {
 
             // this code is intentionally not parallel to remain simple
             // it used to be, but the bottleneck is IO anyway and wasn't that much faster
-            
+
+            var script_patterns_file = ConfigurationManager.AppSettings["script_patterns_file"];
+
             //LogNonStdTransactions(files);
-            LogScriptPatterns(files, @"e:\patterns.txt");
+            LogScriptPatterns(files, script_patterns_file);
             //IndexBlocksAndTransactions(files, @"e:\blocks_index.csv", @"e:\tx_index.csv");
         }
 
         private static string GetBlocksFolder() {
-            var author_bitcoin_folder = @"c:\blocks";
-            if(Directory.Exists(author_bitcoin_folder))
+            var author_bitcoin_folder = ConfigurationManager.AppSettings["author_bitcoin_folder"];
+            
+            if (Directory.Exists(author_bitcoin_folder))
                 return author_bitcoin_folder;
 
             // change this to your "BitCoin Core" folder. ie: "%appdata%/Bitcoin/data" ?
